@@ -11,14 +11,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Install Rust
-      uses: actions-rs/toolchain@v1
+      uses: actions-rs/toolchain@v2
       with:
         profile: minimal
         toolchain: stable
         override: true
+
+    - name: Change to the 2023 directory
+      run: cd 2023
 
     - name: Build
       run: cargo build --all --verbose
