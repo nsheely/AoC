@@ -142,4 +142,4 @@ jobs:
       uses: benchmark-action/github-action-benchmark@v1
       with:
         tool: 'cargo'
-        output-file-path: benchmark_results.txt
+        output-file-path: ./2023/benchmark_results.txt
