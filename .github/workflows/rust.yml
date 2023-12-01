@@ -21,7 +21,7 @@ jobs:
         override: true
 
     - name: Change to the 2023 directory
-      run: cd 2023
+      run: cd ./2023
 
     - name: Build
       run: cargo build --all --verbose
