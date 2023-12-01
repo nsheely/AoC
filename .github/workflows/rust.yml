@@ -138,8 +138,8 @@ jobs:
     - name: Run benchmarks
       run: cargo bench | tee benchmark_results.txt
 
-    - name: Store benchmark result
-      uses: benchmark-action/github-action-benchmark@v1
+    - name: Upload Benchmark Results
+      uses: actions/upload-artifact@v2
       with:
-        tool: 'cargo'
-        output-file-path: ./2023/benchmark_results.txt
+        name: benchmark-results
+        path: ./2023/benchmark_results.txt
