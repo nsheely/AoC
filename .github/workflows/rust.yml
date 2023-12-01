@@ -137,7 +137,7 @@ jobs:
 
     - name: Run Benchmarks
       run: |
-        cargo bench -- --output-format bencher > benchmark_results.txt
+        cargo bench > benchmark_results.txt
 
     - name: Upload Benchmark Results
       uses: actions/upload-artifact@v2
