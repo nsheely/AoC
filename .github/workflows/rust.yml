@@ -135,12 +135,11 @@ jobs:
         toolchain: stable
         override: true
 
-    - name: Run Benchmarks
-      run: |
-        cargo bench > benchmark_results.txt
+    - name: Run benchmarks
+      run: cargo bench | tee benchmark_results.txt
 
-    - name: Upload Benchmark Results
-      uses: actions/upload-artifact@v2
+    - name: Store benchmark result
+      uses: benchmark-action/github-action-benchmark@v1
       with:
-        name: benchmark-results
-        path: benchmark_results.txt
+        tool: 'cargo'
+        output-file-path: benchmark_results.txt
