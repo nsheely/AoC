@@ -109,6 +109,7 @@ jobs:
       run: cargo clippy --all-targets --all-features -- -D warnings
 
   benchmarks:
+    needs: [test, lint]
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.run_benchmarks == 'true' }}
     defaults:
@@ -135,4 +136,11 @@ jobs:
         override: true
 
     - name: Run Benchmarks
-      run: cargo bench
+      run: |
+        cargo bench -- --output-format bencher > benchmark_results.txt
+
+    - name: Upload Benchmark Results
+      uses: actions/upload-artifact@v2
+      with:
+        name: benchmark-results
+        path: benchmark_results.txt
