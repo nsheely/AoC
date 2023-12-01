@@ -6,5 +6,6 @@
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/nsheely/AoC)
 ![GitHub](https://img.shields.io/github/license/nsheely/AoC)
 ![GitHub top language](https://img.shields.io/github/languages/top/nsheely/AoC)
+![GitHub stars](https://img.shields.io/github/stars/nsheely/AoC)
 
 Here is where I am storing my solutions to the [Advent of Code](https://adventofcode.com/) challenges.
