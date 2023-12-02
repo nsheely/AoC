@@ -111,20 +111,23 @@ jobs:
   coverage:
     needs: [test, lint]
     runs-on: ubuntu-latest
-    environment: gcp
     defaults:
       run:
         working-directory: ./2023
     steps:
       - uses: actions/checkout@v3
-      - name: Install grcov
-        run: cargo install grcov
+      - name: Install Rust Nightly Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
       - name: Generate coverage data
         run: |
           export CARGO_INCREMENTAL=0
           export RUSTFLAGS="-Zinstrument-coverage"
           export LLVM_PROFILE_FILE="aoc-%p-%m.profraw"
-          cargo test --all --verbose
+          cargo +nightly test --all --verbose
           grcov ./ -s . -t html --llvm --branch --ignore-not-existing -o ./coverage/
       - name: Install Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
