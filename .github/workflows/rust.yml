@@ -95,7 +95,7 @@ jobs:
         run: cargo install cargo-llvm-cov
       - name: Generate coverage data
         run: |
-          cargo llvm-cov --workspace --verbose --json --output-dir ./coverage/
+          cargo llvm-cov --workspace --verbose --json > coverage.json
       - name: Install Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
         with:
@@ -103,7 +103,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
       - name: Upload coverage data to GCS
-        run: gsutil cp -r ./coverage/ gs://aoc_coverage/coverage-data/
+          run: gsutil cp coverage.json gs://aoc_coverage/coverage-data/llvm-cov.json
 
   benchmarks:
     needs: [test, lint]
