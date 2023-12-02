@@ -33,9 +33,8 @@ jobs:
         with:
           profile: minimal
           toolchain: nightly
+          components: llvm-tools-preview
           override: true
-      - name: Install cargo llvm-cov
-        run: cargo install cargo-llvm-cov
       - name: Build
         run: cargo build --all --verbose
 
@@ -84,16 +83,18 @@ jobs:
         working-directory: ./2023
     steps:
       - uses: actions/checkout@v3
-      - name: Cache Cargo dependencies
-        uses: actions/cache@v2
+      - name: Install Rust Nightly Toolchain and Components
+        uses: actions-rs/toolchain@v1
         with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - name: Run Coverage
-        run: cargo llvm-cov --workspace --verbose --html --output-dir ./coverage/
+          profile: minimal
+          toolchain: nightly
+          components: llvm-tools-preview
+          override: true
+      - name: Install cargo llvm-cov
+        run: cargo install cargo-llvm-cov
+      - name: Generate coverage data
+        run: |
+          cargo llvm-cov --workspace --verbose --html --output-dir ./coverage/
       - name: Install Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
         with:
