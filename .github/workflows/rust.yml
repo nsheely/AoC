@@ -121,6 +121,7 @@ jobs:
         with:
           profile: minimal
           toolchain: nightly
+          components: llvm-tools-preview
           override: true
       - name: Generate coverage data
         run: |
@@ -137,6 +138,7 @@ jobs:
           export_default_credentials: true
       - name: Upload coverage data to GCS
         run: gsutil cp -r ./coverage/ gs://aoc_coverage/coverage-data/
+
 
 
   benchmarks:
