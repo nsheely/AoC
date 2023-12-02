@@ -18,38 +18,26 @@ jobs:
     defaults:
       run:
         working-directory: ./2023
-
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Cache Cargo dependencies
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-    - name: Cache Rust toolchain
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.rustup
-          ~/.cargo/bin
-        key: ${{ runner.os }}-rustup-${{ hashFiles('**/rust-toolchain') }}
-        restore-keys: |
-          ${{ runner.os }}-rustup-
-
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
-
-    - name: Build
-      run: cargo build --all --verbose
+      - uses: actions/checkout@v3
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Install Rust Nightly Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+      - name: Install cargo llvm-cov
+        run: cargo install cargo-llvm-cov
+      - name: Build
+        run: cargo build --all --verbose
 
   test:
     needs: build
@@ -57,56 +45,36 @@ jobs:
     defaults:
       run:
         working-directory: ./2023
-
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Cache Cargo dependencies
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
-
-    - name: Run tests
-      run: cargo test --all --verbose
+      - uses: actions/checkout@v3
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Run tests
+        run: cargo test --all --verbose
 
   lint:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./2023
-
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Cache Cargo dependencies
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
-
-    - name: Lint with Clippy
-      run: cargo clippy --all-targets --all-features -- -D warnings
+      - uses: actions/checkout@v3
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Lint with Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
 
   coverage:
     needs: [test, lint]
@@ -116,22 +84,16 @@ jobs:
         working-directory: ./2023
     steps:
       - uses: actions/checkout@v3
-      - name: Install Rust Nightly Toolchain and Components
-        uses: actions-rs/toolchain@v1
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v2
         with:
-          profile: minimal
-          toolchain: nightly
-          components: llvm-tools-preview
-          override: true
-      - name: Install grcov
-        run: cargo +nightly install grcov
-      - name: Generate coverage data
-        run: |
-          export CARGO_INCREMENTAL=0
-          export RUSTFLAGS="-Zinstrument-coverage"
-          export LLVM_PROFILE_FILE="aoc-%p-%m.profraw"
-          cargo +nightly test --all --verbose
-          grcov ./ -s . -t html --llvm --branch --ignore-not-existing -o ./coverage/
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Run Coverage
+        run: cargo llvm-cov --workspace --verbose --html --output-dir ./coverage/
       - name: Install Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
         with:
@@ -148,31 +110,20 @@ jobs:
     defaults:
       run:
         working-directory: ./2023
-
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Cache Cargo dependencies
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
-
-    - name: Run benchmarks
-      run: cargo bench | tee benchmark_results.txt
-
-    - name: Upload Benchmark Results
-      uses: actions/upload-artifact@v2
-      with:
-        name: benchmark-results
-        path: ./2023/benchmark_results.txt
+      - uses: actions/checkout@v3
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Run benchmarks
+        run: cargo bench | tee benchmark_results.txt
+      - name: Upload Benchmark Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: benchmark-results
+          path: ./2023/benchmark_results.txt
