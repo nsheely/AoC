@@ -103,7 +103,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
       - name: Upload coverage data to GCS
-          run: gsutil cp coverage.json gs://aoc_coverage/coverage-data/llvm-cov.json
+        run: gsutil cp coverage.json gs://aoc_coverage/coverage-data/llvm-cov.json
 
   benchmarks:
     needs: [test, lint]
