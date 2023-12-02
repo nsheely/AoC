@@ -76,6 +76,7 @@ jobs:
         run: cargo clippy --all-targets --all-features -- -D warnings
 
   coverage:
+    environment: gcp
     needs: [test, lint]
     runs-on: ubuntu-latest
     defaults:
