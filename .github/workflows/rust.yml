@@ -116,13 +116,15 @@ jobs:
         working-directory: ./2023
     steps:
       - uses: actions/checkout@v3
-      - name: Install Rust Nightly Toolchain
+      - name: Install Rust Nightly Toolchain and Components
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: nightly
           components: llvm-tools-preview
           override: true
+      - name: Install grcov
+        run: cargo install grcov
       - name: Generate coverage data
         run: |
           export CARGO_INCREMENTAL=0
@@ -138,8 +140,6 @@ jobs:
           export_default_credentials: true
       - name: Upload coverage data to GCS
         run: gsutil cp -r ./coverage/ gs://aoc_coverage/coverage-data/
-
-
 
   benchmarks:
     needs: [test, lint]
