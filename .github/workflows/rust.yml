@@ -124,7 +124,7 @@ jobs:
           components: llvm-tools-preview
           override: true
       - name: Install grcov
-        run: cargo install grcov
+        run: cargo +nightly install grcov
       - name: Generate coverage data
         run: |
           export CARGO_INCREMENTAL=0
