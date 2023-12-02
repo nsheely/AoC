@@ -3,7 +3,7 @@ pub mod part1 {
     // Checks if a single pull of cubes from the bag is valid given the maximum allowed cubes of each color.
     fn is_valid_pull(segment: &str, max_red: u32, max_green: u32, max_blue: u32) -> bool {
         for color_info in segment.split(',') {
-            let mut color_parts = color_info.trim().split_whitespace();
+            let mut color_parts = color_info.split_whitespace();
             let count = color_parts.next().unwrap_or("0").parse::<u32>().unwrap_or(0);
             match color_parts.next().unwrap_or("") {
                 "red" if count > max_red => return false,
@@ -18,7 +18,7 @@ pub mod part1 {
     // Parses a game line and returns the game id if each pull is valid, otherwise None.
     fn parse_and_validate_game(line: &str, max_red: u32, max_green: u32, max_blue: u32) -> Option<u32> {
         let (id_part, segments) = line.split_once(':')?;
-        let game_id = id_part.trim().split_whitespace().last()?.parse::<u32>().ok()?;
+        let game_id = id_part.split_whitespace().last()?.parse::<u32>().ok()?;
         
         for segment in segments.split(';') {
             if !is_valid_pull(segment, max_red, max_green, max_blue) {
@@ -45,7 +45,7 @@ pub mod part2 {
         let mut blue = 0;
 
         for color_info in segment.split(',') {
-            let mut color_parts = color_info.trim().split_whitespace();
+            let mut color_parts = color_info.split_whitespace();
             let count = color_parts.next().unwrap_or("0").parse::<u32>().unwrap_or(0);
             match color_parts.next().unwrap_or("") {
                 "red" => red = red.max(count),
@@ -61,7 +61,7 @@ pub mod part2 {
     // Parses a game line and calculates the product of the maximum counts of each color cube pulled.
     fn parse_and_min_product_game(line: &str) -> Option<u32> {
         let (id_part, segments) = line.split_once(':')?;
-        let _game_id = id_part.trim().split_whitespace().last()?.parse::<u32>().ok()?;
+        let _game_id = id_part.split_whitespace().last()?.parse::<u32>().ok()?;
 
         let mut max_red = 0;
         let mut max_green = 0;
@@ -81,7 +81,7 @@ pub mod part2 {
     pub fn sum_of_product_of_min_cubes(input: &str) -> u32 {
         input
             .lines()
-            .filter_map(|line| parse_and_min_product_game(line))
+            .filter_map(parse_and_min_product_game)
             .sum()
     }
 }
