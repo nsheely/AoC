@@ -111,6 +111,7 @@ jobs:
   coverage:
     needs: [test, lint]
     runs-on: ubuntu-latest
+    environment: gcp
     defaults:
       run:
         working-directory: ./2023
@@ -128,8 +129,8 @@ jobs:
       - name: Install Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
         with:
-          project_id: ${{ gcp.GCP_PROJECT_ID }}
-          service_account_key: ${{ gcp.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
       - name: Upload coverage data to GCS
         run: gsutil cp -r ./coverage/ gs://aoc_coverage/coverage-data/
