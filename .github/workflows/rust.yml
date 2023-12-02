@@ -108,6 +108,33 @@ jobs:
     - name: Lint with Clippy
       run: cargo clippy --all-targets --all-features -- -D warnings
 
+  coverage:
+    needs: [test, lint]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./2023
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install grcov
+        run: cargo install grcov
+      - name: Generate coverage data
+        run: |
+          export CARGO_INCREMENTAL=0
+          export RUSTFLAGS="-Zinstrument-coverage"
+          export LLVM_PROFILE_FILE="aoc-%p-%m.profraw"
+          cargo test --all --verbose
+          grcov ./ -s . -t html --llvm --branch --ignore-not-existing -o ./coverage/
+      - name: Install Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ gcp.GCP_PROJECT_ID }}
+          service_account_key: ${{ gcp.GCP_SA_KEY }}
+          export_default_credentials: true
+      - name: Upload coverage data to GCS
+        run: gsutil cp -r ./coverage/ gs://aoc_coverage/coverage-data/
+
+
   benchmarks:
     needs: [test, lint]
     runs-on: ubuntu-latest
