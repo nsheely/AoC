@@ -8,3 +8,15 @@
 ![GitHub stars](https://img.shields.io/github/stars/nsheely/AoC)
 
 Here is where I am storing my solutions to the [Advent of Code](https://adventofcode.com/) challenges.
+
+## Benchmarks
+
+Performed with Criterion.rs on a M1 Macbook Pro.
+
+Estimated median runtime for each day's solutions when run againt the provided puzzle input.
+
+| Day | Part 1 | Part 2 |
+| --- | ------ | ------ |
+| 1   | 20.818 µs  | 92.289 µs  |
+| 2   | 22.620 µs  | 32.216 µs  |
+| 3   | 55.307 µs  | 86.860 µs  |

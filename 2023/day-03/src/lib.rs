@@ -174,19 +174,38 @@ pub mod part2 {
 
     // Function to sum gear ratios
     fn sum_gear_ratios(
-        gears: &[usize], // Gears in the current line
-        prev_numbers: &[(usize, usize, u32)], // Numbers in the previous line
+        gears: &[usize],                         // Gears in the current line
+        prev_numbers: &[(usize, usize, u32)],    // Numbers in the previous line
         current_numbers: &[(usize, usize, u32)], // Numbers in the current line
-        next_numbers: &[(usize, usize, u32)], // Numbers in the next line
+        next_numbers: &[(usize, usize, u32)],    // Numbers in the next line
     ) -> u32 {
         let mut sum = 0;
+
+        // Indices to keep track of our position in the symbol arrays as we iterate.
+        let mut prev_index = 0;
+        let mut curr_index = 0;
+        let mut next_index = 0;
 
         for &gear_index in gears {
             // Gather adjacent numbers to this gear
             let mut adjacent_numbers = Vec::new();
-            adjacent_numbers.extend(find_adjacent_numbers(gear_index, prev_numbers));
-            adjacent_numbers.extend(find_adjacent_numbers(gear_index, current_numbers));
-            adjacent_numbers.extend(find_adjacent_numbers(gear_index, next_numbers));
+            adjacent_numbers.extend(find_adjacent_numbers(
+                gear_index,
+                prev_numbers,
+                &mut prev_index,
+            ));
+            adjacent_numbers.extend(find_adjacent_numbers(
+                gear_index,
+                next_numbers,
+                &mut next_index,
+            ));
+            if adjacent_numbers.len() <= 2 {
+                adjacent_numbers.extend(find_adjacent_numbers(
+                    gear_index,
+                    current_numbers,
+                    &mut curr_index,
+                ));
+            }
 
             // Calculate gear ratio if exactly two numbers are found
             if adjacent_numbers.len() == 2 {
@@ -198,12 +217,48 @@ pub mod part2 {
     }
 
     // Helper function to find adjacent numbers to a given index
-    fn find_adjacent_numbers(index: usize, numbers: &[(usize, usize, u32)]) -> Vec<(usize, usize, u32)> {
-        numbers.iter()
-            .filter(|&&(start, end, _)| (start..=end).any(|i| (i as i32 - index as i32).abs() <= 1))
-            .cloned()
-            .collect()
+    fn find_adjacent_numbers(
+        gear_index: usize,
+        numbers: &[(usize, usize, u32)],
+        index: &mut usize,
+    ) -> Vec<(usize, usize, u32)> {
+        let mut adjacent_numbers = Vec::new();
+    
+        // Advance the index to the first number that could be adjacent to the gear.
+        while *index < numbers.len() && numbers[*index].1 < gear_index.saturating_sub(1) {
+            *index += 1;
+        }
+    
+        // Check numbers in the range of this gear.
+        while *index < numbers.len() {
+            let (start, end, value) = numbers[*index];
+            if end < gear_index.saturating_sub(1) {
+                // If the end index is before the gear, continue to the next number.
+                *index += 1;
+                continue;
+            }
+    
+            if start > gear_index + 1 {
+                // If the start index is past the gear, stop checking further numbers.
+                break;
+            }
+    
+            if (start..=end).any(|i| (i as i32 - gear_index as i32).abs() <= 1) {
+                // If the number is adjacent to the gear, add it to the list.
+                adjacent_numbers.push((start, end, value));
+                if adjacent_numbers.len() == 2 {
+                    // Only need two adjacent numbers for a gear.
+                    break;
+                }
+            }
+    
+            *index += 1;
+        }
+    
+        adjacent_numbers
     }
+    
+    
 
     // Main function to calculate the sum of all gear ratios
     pub fn sum_of_gear_ratios(input: &str) -> u32 {
@@ -221,7 +276,8 @@ pub mod part2 {
                 let (current_numbers, current_gears) = &lines[1];
                 let (next_numbers, _) = &lines[2];
 
-                total_sum += sum_gear_ratios(current_gears, prev_numbers, current_numbers, next_numbers);
+                total_sum +=
+                    sum_gear_ratios(current_gears, prev_numbers, current_numbers, next_numbers);
                 lines.pop_front();
             }
         }
