@@ -27,5 +27,3 @@ mod tests {
         assert_eq!(sum_of_product_of_min_cubes(input), 2286);
     }
 }
-
-// Define your structs and functions here...

@@ -27,5 +27,3 @@ mod tests {
         assert_eq!(sum_of_possible_game_ids(input, 12, 13, 14), 8);
     }
 }
-
-// Define your structs and functions here...
