@@ -1,4 +1,4 @@
-// src/bin/part1.rs
+// src/bin/part2.rs
 
 // sum up all part numbers, a part number has an adjacent symbol ( not . ) in the list
 
