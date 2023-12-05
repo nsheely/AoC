@@ -9,7 +9,7 @@ pub mod part1 {
                 let mut player_numbers_started = false;
 
                 // Skip the "Card X: " part
-                let numbers_part = line.split_once(": ").unwrap().1;
+                let numbers_part = &line[9..];
 
                 for word in numbers_part.split_whitespace() {
                     // Detect when player numbers start
@@ -58,7 +58,7 @@ pub mod part2 {
             let mut player_numbers_started = false;
             let mut match_count = 0;
             // Skip the "Card X: " part
-            let numbers_part = line.split_once(": ").unwrap().1;
+            let numbers_part = &line[9..];
 
             for word in numbers_part.split_whitespace() {
                 // Detect when player numbers start
