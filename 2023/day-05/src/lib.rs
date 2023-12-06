@@ -33,7 +33,6 @@ pub mod part1 {
                 }
             }
 
-            // Return the constructed `Almanac`.
             Almanac { mappings }
         }
 
@@ -81,34 +80,32 @@ pub mod part1 {
 pub mod part2 {
     use std::collections::BTreeMap;
 
-    // The Almanac struct holds a series of mappings, each a BTreeMap, for different transformation steps.
+    // Define the structure `Almanac` to hold the mappings.
     pub struct Almanac {
+        // An array of BTreeMaps, each representing a different category of mapping.
+        // BTreeMap is chosen for efficient range queries.
         mappings: [BTreeMap<u64, (u64, u64)>; 7],
     }
 
     impl Almanac {
-        // Constructs a new Almanac from a string input.
+        // Constructs a new `Almanac` from a string input.
         fn new(input: &str) -> Almanac {
-            let lines = input.lines();
-            // Initialize an array of 7 BTreeMaps, one for each transformation step.
-            let mut mappings = [
-                BTreeMap::new(), BTreeMap::new(), BTreeMap::new(),
-                BTreeMap::new(), BTreeMap::new(), BTreeMap::new(),
-                BTreeMap::new(),
-            ];
-            let mut current_map = 0;
+            let lines = input.lines(); // Split the input into lines.
+            // Initialize an array of BTreeMaps, one for each category.
+            let mut mappings = [BTreeMap::new(), BTreeMap::new(), BTreeMap::new(), BTreeMap::new(), BTreeMap::new(), BTreeMap::new(), BTreeMap::new()];
+            let mut current_map = 0; // Index to track the current map being processed.
 
-            // Iterate through the input, filling each mapping as specified.
+            // Iterate through each line in the input.
             for line in lines {
                 if line.contains("map:") {
-                    // Increment to the next mapping upon encountering a new map label.
+                    // Increment the index when a new category is encountered.
                     current_map += 1;
                 } else if !line.is_empty() {
-                    // Parse each line into parts and insert them into the current mapping.
-                    // Each part consists of a destination start, source start, and range length.
+                    // Parse the mapping line into a vector of parts.
                     let parts: Vec<u64> = line.split_whitespace()
                                               .filter_map(|s| s.parse().ok())
                                               .collect();
+                    // Insert the mapping into the appropriate BTreeMap.
                     if parts.len() == 3 {
                         mappings[current_map - 1].insert(parts[1], (parts[0], parts[2]));
                     }
