@@ -41,7 +41,7 @@ pub mod part1 {
             // Iterate over each mapping category in order, applying the mapping to the seed.
             self.mappings.iter().fold(seed, |acc, map| {
                 // For each category, find the appropriate range and compute the mapped value.
-                map.range(..=acc).rev().next()
+                map.range(..=acc).next_back()
                    .map_or(acc, |(&src_start, &(dest_start, length))| {
                        if acc < src_start + length {
                            // If the seed is within the range, calculate the mapped value.
@@ -139,7 +139,7 @@ pub mod part2 {
             // Iterate over the range, applying the mapping to each part.
             while current_start < end {
                 // Find the mapping that applies to the current start of the range.
-                if let Some((&src_start, &(dest_start, range_len))) = map.range(..=current_start).rev().next() {
+                if let Some((&src_start, &(dest_start, range_len))) = map.range(..=current_start).next_back() {
                     let src_end = src_start + range_len;
                     // If the current start is within a mapped range, calculate the new range.
                     if current_start < src_end {
