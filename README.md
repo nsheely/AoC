@@ -25,3 +25,4 @@ Estimated median runtime for each day's solutions when run againt the provided p
 | 6   | 162.25 ns  | 155.36 ns  |
 | 7   | 74.709 µs  | 100.14 µs  |
 | 8   | 81.476 µs  | 249.10 µs  |
+| 9   | 86.642 µs  | 85.652 µs  |

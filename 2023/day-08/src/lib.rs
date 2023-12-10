@@ -117,5 +117,9 @@ pub mod part2 {
             // Calculate the least common multiple (LCM) of steps across all paths
             // This finds the first time all paths end with 'Z' simultaneously
             .fold(1, num_integer::lcm)
+            // NOTE: This is not a generally correct solution, 
+            // this is expliting how the input is structured to have 6 independent paths
+            // where each start has exactly 1 end and the Z nodes always have the same destinations 
+            // as the A nodes.
     }
 }
