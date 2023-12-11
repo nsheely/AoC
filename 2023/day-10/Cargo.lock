@@ -162,77 +162,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "day_02"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "regex",
-]
-
-[[package]]
-name = "day_03"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "regex",
-]
-
-[[package]]
-name = "day_04"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "regex",
-]
-
-[[package]]
-name = "day_05"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "regex",
-]
-
-[[package]]
-name = "day_06"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "regex",
-]
-
-[[package]]
-name = "day_07"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "regex",
-]
-
-[[package]]
-name = "day_08"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "num-integer",
- "regex",
-]
-
-[[package]]
-name = "day_09"
-version = "0.1.0"
-dependencies = [
- "criterion",
-]
-
-[[package]]
-name = "day_10"
-version = "0.1.0"
-dependencies = [
- "criterion",
-]
-
-[[package]]
 name = "either"
 version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -308,16 +237,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5a634b1c61a95585bd15607c6ab0c4e5b226e695ff2800ba0cdccddf208c406c"
 dependencies = [
  "autocfg",
-]
-
-[[package]]
-name = "num-integer"
-version = "0.1.45"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "225d3389fb3509a24c93f5c29eb6bde2586b98d9f016636dff58d7c6f7569cd9"
-dependencies = [
- "autocfg",
- "num-traits",
 ]
 
 [[package]]
