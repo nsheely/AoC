@@ -312,32 +312,31 @@ pub mod part2 {
         area.abs() / 2.0
     }
 
-// Public function to calculate the number of tiles enclosed by the loop.
-// It uses the Surveyor's formula to calculate the area of the loop and then applies Pick's theorem.
-// Pick's theorem relates the area of a grid-based polygon to its interior and boundary lattice points:
-// A = I + 0.5 * B - 1, where A is the area, I is the number of interior points, and B is the number of boundary points.
-// Since we are interested only in the internal vertices (I), we rearrange Pick's theorem:
-// I = A - 0.5 * B + 1
-// Here, we count the boundary points as the vertices in the loop. However, we slightly modify the formula:
-// As the loop may pass through some boundary points without enclosing them, we subtract 0.5 * vertices.len() instead.
-// This modification ensures an accurate count of internal tiles, excluding those on the perimeter.
-pub fn num_enclosed_tiles(input: &str) -> u32 {
-    let grid = parse_input(input);
-    let start = find_start(&grid).unwrap(); // Find the starting point of the loop
-    let loop_vertices = navigate_loop(&grid, start).unwrap_or(vec![]); // Traverse the loop to get vertices
+    // Public function to calculate the number of tiles enclosed by the loop.
+    // It uses the Surveyor's formula to calculate the area of the loop and then applies Pick's theorem.
+    // Pick's theorem relates the area of a grid-based polygon to its interior and boundary lattice points:
+    // A = I + 0.5 * B - 1, where A is the area, I is the number of interior points, and B is the number of boundary points.
+    // Since we are interested only in the internal vertices (I), we rearrange Pick's theorem:
+    // I = A - 0.5 * B + 1
+    // Here, we count the boundary points as the vertices in the loop. However, we slightly modify the formula:
+    // As the loop may pass through some boundary points without enclosing them, we subtract 0.5 * vertices.len() instead.
+    // This modification ensures an accurate count of internal tiles, excluding those on the perimeter.
+    pub fn num_enclosed_tiles(input: &str) -> u32 {
+        let grid = parse_input(input);
+        let start = find_start(&grid).unwrap(); // Find the starting point of the loop
+        let loop_vertices = navigate_loop(&grid, start).unwrap_or_default(); // Traverse the loop to get vertices
 
-    // Convert loop vertices (Positions) to tuples of coordinates for area calculation
-    let vertices = loop_vertices
-        .iter()
-        .map(|&Position(i, j)| (i, j))
-        .collect::<Vec<_>>();
+        // Convert loop vertices (Positions) to tuples of coordinates for area calculation
+        let vertices = loop_vertices
+            .iter()
+            .map(|&Position(i, j)| (i, j))
+            .collect::<Vec<_>>();
 
-    // Calculate area enclosed by the loop using the Surveyor's formula
-    let area = surveyors_formula(&vertices);
+        // Calculate area enclosed by the loop using the Surveyor's formula
+        let area = surveyors_formula(&vertices);
 
-    // Applying the modified Pick's theorem to calculate the number of internal lattice points (tiles)
-    let internal_vtx_count = area + 1.5 - 0.5 * vertices.len() as f64;
-    internal_vtx_count.round() as u32 // Round the result to get the count of tiles
-}
-
+        // Applying the modified Pick's theorem to calculate the number of internal lattice points (tiles)
+        let internal_vtx_count = area + 1.5 - 0.5 * vertices.len() as f64;
+        internal_vtx_count.round() as u32 // Round the result to get the count of tiles
+    }
 }
