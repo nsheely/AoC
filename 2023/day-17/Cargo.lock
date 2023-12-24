@@ -74,7 +74,7 @@ dependencies = [
  "clap",
  "criterion-plot",
  "csv",
- "itertools 0.10.5",
+ "itertools",
  "lazy_static",
  "num-traits",
  "oorandom",
@@ -96,7 +96,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2673cc8207403546f45f5fd319a974b1e6983ad1a3ee7e6041650013be041876"
 dependencies = [
  "cast",
- "itertools 0.10.5",
+ "itertools",
 ]
 
 [[package]]
@@ -162,136 +162,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "day_02"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "regex",
-]
-
-[[package]]
-name = "day_03"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "regex",
-]
-
-[[package]]
-name = "day_04"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "regex",
-]
-
-[[package]]
-name = "day_05"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "regex",
-]
-
-[[package]]
-name = "day_06"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "regex",
-]
-
-[[package]]
-name = "day_07"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "regex",
-]
-
-[[package]]
-name = "day_08"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "num-integer",
- "regex",
-]
-
-[[package]]
-name = "day_09"
-version = "0.1.0"
-dependencies = [
- "criterion",
-]
-
-[[package]]
-name = "day_10"
-version = "0.1.0"
-dependencies = [
- "criterion",
-]
-
-[[package]]
-name = "day_11"
-version = "0.1.0"
-dependencies = [
- "criterion",
-]
-
-[[package]]
-name = "day_12"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "itertools 0.12.0",
- "rayon",
-]
-
-[[package]]
-name = "day_13"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "itertools 0.12.0",
- "rayon",
- "regex",
-]
-
-[[package]]
-name = "day_14"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "itertools 0.12.0",
- "rayon",
- "regex",
-]
-
-[[package]]
-name = "day_15"
-version = "0.1.0"
-dependencies = [
- "criterion",
-]
-
-[[package]]
-name = "day_16"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "rayon",
-]
-
-[[package]]
-name = "day_17"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "rayon",
-]
-
-[[package]]
 name = "either"
 version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -317,15 +187,6 @@ name = "itertools"
 version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b0fd2260e829bddf4cb6ea802289de2f86d6a7a690192fbe91b3f46e0f2c8473"
-dependencies = [
- "either",
-]
-
-[[package]]
-name = "itertools"
-version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "25db6b064527c5d482d0423354fcd07a89a2dfe07b67892e62411946db7f07b0"
 dependencies = [
  "either",
 ]
@@ -376,16 +237,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5a634b1c61a95585bd15607c6ab0c4e5b226e695ff2800ba0cdccddf208c406c"
 dependencies = [
  "autocfg",
-]
-
-[[package]]
-name = "num-integer"
-version = "0.1.45"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "225d3389fb3509a24c93f5c29eb6bde2586b98d9f016636dff58d7c6f7569cd9"
-dependencies = [
- "autocfg",
- "num-traits",
 ]
 
 [[package]]
