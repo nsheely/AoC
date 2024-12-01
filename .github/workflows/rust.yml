@@ -13,11 +13,26 @@ on:
         default: 'false'
 
 jobs:
-  build:
+  detect-years:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: set-matrix
+        run: |
+          YEARS=$(ls -d [0-9][0-9][0-9][0-9] | jq -R -s -c 'split("\n")[:-1]')
+          echo "matrix=${YEARS}" >> $GITHUB_OUTPUT
+
+  build:
+    needs: detect-years
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        year: ${{fromJSON(needs.detect-years.outputs.matrix)}}
     defaults:
       run:
-        working-directory: ./2023
+        working-directory: ./${{ matrix.year }}
     steps:
       - uses: actions/checkout@v3
       - name: Cache Cargo dependencies
@@ -27,7 +42,7 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-${{ matrix.year }}-${{ hashFiles(format('./{0}/Cargo.lock', matrix.year)) }}
       - name: Install Rust Nightly Toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -39,11 +54,14 @@ jobs:
         run: cargo build --all --verbose
 
   test:
-    needs: build
+    needs: [detect-years, build]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        year: ${{fromJSON(needs.detect-years.outputs.matrix)}}
     defaults:
       run:
-        working-directory: ./2023
+        working-directory: ./${{ matrix.year }}
     steps:
       - uses: actions/checkout@v3
       - name: Cache Cargo dependencies
@@ -53,15 +71,19 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-${{ matrix.year }}-${{ hashFiles(format('./{0}/Cargo.lock', matrix.year)) }}
       - name: Run tests
         run: cargo test --all --verbose
 
   lint:
+    needs: detect-years
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        year: ${{fromJSON(needs.detect-years.outputs.matrix)}}
     defaults:
       run:
-        working-directory: ./2023
+        working-directory: ./${{ matrix.year }}
     steps:
       - uses: actions/checkout@v3
       - name: Cache Cargo dependencies
@@ -71,47 +93,20 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-${{ matrix.year }}-${{ hashFiles(format('./{0}/Cargo.lock', matrix.year)) }}
       - name: Lint with Clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
 
-  coverage:
-    environment: gcp
-    needs: [test, lint]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./2023
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install Rust Nightly Toolchain and Components
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: nightly
-          components: llvm-tools-preview
-          override: true
-      - name: Install cargo llvm-cov
-        run: cargo install cargo-llvm-cov
-      - name: Generate coverage data
-        run: |
-          cargo llvm-cov --workspace --verbose --json > coverage.json
-      - name: Install Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-      - name: Upload coverage data to GCS
-        run: gsutil cp coverage.json gs://aoc_coverage/coverage-data/llvm-cov.json
-
   benchmarks:
-    needs: [test, lint]
+    needs: [detect-years, test, lint]
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.run_benchmarks == 'true' }}
+    strategy:
+      matrix:
+        year: ${{fromJSON(needs.detect-years.outputs.matrix)}}
     defaults:
       run:
-        working-directory: ./2023
+        working-directory: ./${{ matrix.year }}
     steps:
       - uses: actions/checkout@v3
       - name: Cache Cargo dependencies
@@ -121,11 +116,11 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-${{ matrix.year }}-${{ hashFiles(format('./{0}/Cargo.lock', matrix.year)) }}
       - name: Run benchmarks
-        run: cargo bench | tee benchmark_results.txt
+        run: cargo bench | tee benchmark_results-${{ matrix.year }}.txt
       - name: Upload Benchmark Results
         uses: actions/upload-artifact@v2
         with:
-          name: benchmark-results
-          path: ./2023/benchmark_results.txt
+          name: benchmark-results-${{ matrix.year }}
+          path: ./${{ matrix.year }}/benchmark_results-${{ matrix.year }}.txt

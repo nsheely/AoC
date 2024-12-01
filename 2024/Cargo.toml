@@ -1,0 +1,6 @@
+# advent_of_code/2024/Cargo.toml
+
+[workspace]
+resolver = "2"
+
+members = ["day-*"]
