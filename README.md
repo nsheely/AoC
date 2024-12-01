@@ -15,6 +15,8 @@ Performed with Criterion.rs on a M1 Macbook Pro.
 
 Estimated median runtime for each day's solutions when run againt the provided puzzle input.
 
+2023
+
 | Day | Part 1 | Part 2 |
 | --- | ------ | ------ |
 | 1   | 20.438 µs  | 92.289 µs  |
@@ -36,3 +38,9 @@ Estimated median runtime for each day's solutions when run againt the provided p
 | 17  | 59.083 ms  | 259.04 ms  |
 | 18  | 18.146 µs  | 36.055 µs  |
 | 19  | 226.58 µs  | 168.36 µs  |
+
+2024
+
+| Day | Part 1 | Part 2 |
+| --- | ------ | ------ |
+| 1   | 25.640 µs  | 14.798 µs  |
