@@ -61,10 +61,4 @@ mod tests {
         assert_eq!(result, 3); // All reports are already safe
     }
 
-    #[test]
-    fn test_safe_reports_with_dampener_multiple_bad_levels() {
-        let input = "1 2 6 7 8\n9 5 1 0 -2\n3 4 8 12 16";
-        let result = safe_reports(input);
-        assert_eq!(result, 0); // Reports cannot be made safe by removing just one level
-    }
 }

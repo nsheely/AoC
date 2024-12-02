@@ -74,94 +74,53 @@ pub mod part2 {
         let len = bytes.len();
         let mut i = 0;
         let mut safe_count = 0u32;
-        // Two fixed arrays: one for the original sequence and one for testing sequences with a number removed
         let mut levels = [0i32; 16];
-        let mut temp_levels = [0i32; 16];
-
+    
         unsafe {
-            // Process each line in the input
             while i < len {
                 let mut num_count = 0;
                 
-                // Parse all numbers in the current line, identical to part 1
                 while i < len && *bytes.get_unchecked(i) != b'\n' {
-                    while i < len && *bytes.get_unchecked(i) == b' ' {
-                        i += 1;
-                    }
-                    
+                    while i < len && *bytes.get_unchecked(i) == b' ' { i += 1; }
                     let mut num = 0i32;
                     while i < len && bytes.get_unchecked(i).is_ascii_digit() {
                         num = num * 10 + (*bytes.get_unchecked(i) - b'0') as i32;
                         i += 1;
                     }
-                    
-                    *levels.get_unchecked_mut(num_count) = num;
-                    num_count += 1;
+                    if num_count < 16 {
+                        *levels.get_unchecked_mut(num_count) = num;
+                        num_count += 1;
+                    }
                 }
                 i += 1;
                 
-                if num_count >= 2 {
-                    // First check if sequence is safe without removing any numbers
-                    let prev = *levels.get_unchecked(0);
-                    let next = *levels.get_unchecked(1);
-                    let increasing = next > prev;
-                    
-                    if (next - prev).abs() <= 3 {
-                        let mut prev = prev;
-                        let mut is_safe = true;
-                        
-                        for idx in 1..num_count {
-                            let num = *levels.get_unchecked(idx);
-                            let diff = num - prev;
-                            if diff.abs() > 3 || (increasing && diff <= 0) || (!increasing && diff >= 0) {
-                                is_safe = false;
-                                break;
-                            }
-                            prev = num;
+                if num_count < 2 { continue; }
+    
+                // For each position, try removing that number and check if remaining sequence is valid
+                'outer: for skip in 0..num_count {
+                    let mut prev = if skip == 0 { *levels.get_unchecked(1) } else { *levels.get_unchecked(0) };
+                    let mut curr_idx = if skip <= 1 { 2 } else { 1 };
+                    let direction = if skip == 0 { 
+                        *levels.get_unchecked(2) - *levels.get_unchecked(1) > 0 
+                    } else { 
+                        *levels.get_unchecked(1) - *levels.get_unchecked(0) > 0 
+                    };
+    
+                    while curr_idx < num_count {
+                        if curr_idx == skip { 
+                            curr_idx += 1;
+                            continue;
                         }
-                        
-                        if is_safe {
-                            safe_count += 1;
-                            continue;  // If sequence is already safe, skip to next line
+                        let curr = *levels.get_unchecked(curr_idx);
+                        let diff = curr - prev;
+                        if diff.abs() > 3 || (direction && diff <= 0) || (!direction && diff >= 0) {
+                            continue 'outer;
                         }
+                        prev = curr;
+                        curr_idx += 1;
                     }
-
-                    // If sequence wasn't safe, try removing each number one at a time
-                    for skip_idx in 0..num_count {
-                        // Create a new sequence with one number removed
-                        let mut temp_count = 0;
-                        for idx in 0..num_count {
-                            if idx != skip_idx {
-                                *temp_levels.get_unchecked_mut(temp_count) = *levels.get_unchecked(idx);
-                                temp_count += 1;
-                            }
-                        }
-
-                        // Check if this modified sequence is safe, using same logic as above
-                        let prev = *temp_levels.get_unchecked(0);
-                        let next = *temp_levels.get_unchecked(1);
-                        let increasing = next > prev;
-                        
-                        if (next - prev).abs() <= 3 {
-                            let mut prev = prev;
-                            let mut is_safe = true;
-                            
-                            for idx in 1..temp_count {
-                                let num = *temp_levels.get_unchecked(idx);
-                                let diff = num - prev;
-                                if diff.abs() > 3 || (increasing && diff <= 0) || (!increasing && diff >= 0) {
-                                    is_safe = false;
-                                    break;
-                                }
-                                prev = num;
-                            }
-                            
-                            if is_safe {
-                                safe_count += 1;
-                                break;  // Found a valid sequence by removing one number, move to next line
-                            }
-                        }
-                    }
+                    safe_count += 1;
+                    break;
                 }
             }
         }
