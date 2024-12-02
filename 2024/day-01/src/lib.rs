@@ -3,70 +3,108 @@ pub mod part1 {
         let mut left = Vec::with_capacity(1024);
         let mut right = Vec::with_capacity(1024);
         let bytes = input.as_bytes();
+        let len = bytes.len();
         let mut i = 0;
 
-        while i < bytes.len() {
-            let mut num = 0;
-            while i < bytes.len() && bytes[i].is_ascii_digit() {
-                num = num * 10 + (bytes[i] - b'0') as u32;
-                i += 1;
+        // Parsing numbers
+        while i < len {
+            // Parse left number
+            let mut num = 0u32;
+            while i < len {
+                let digit = bytes[i];
+                if digit.is_ascii_digit() {
+                    num = num * 10 + (digit - b'0') as u32;
+                    i += 1;
+                } else {
+                    break;
+                }
             }
             left.push(num);
-            i += 1;
+            i += 1; // Skip space or newline
 
-            num = 0;
-            while i < bytes.len() && bytes[i].is_ascii_digit() {
-                num = num * 10 + (bytes[i] - b'0') as u32;
-                i += 1;
+            // Parse right number
+            num = 0u32;
+            while i < len {
+                let digit = bytes[i];
+                if digit.is_ascii_digit() {
+                    num = num * 10 + (digit - b'0') as u32;
+                    i += 1;
+                } else {
+                    break;
+                }
             }
             right.push(num);
 
-            if i < bytes.len() {
+            // Skip newline or carriage return
+            while i < len && (bytes[i] == b'\n' || bytes[i] == b'\r' || bytes[i] == b' ') {
                 i += 1;
             }
         }
 
         left.sort_unstable();
         right.sort_unstable();
-        left.iter()
-            .zip(right.iter())
-            .map(|(a, b)| a.abs_diff(*b))
-            .sum()
+
+        // Replace closure with for loop
+        let mut total_distance = 0u32;
+        let n = left.len();
+        for idx in 0..n {
+            total_distance += left[idx].abs_diff(right[idx]);
+        }
+        total_distance
     }
 }
 
 pub mod part2 {
     pub fn similarity_score(input: &str) -> u64 {
-        let mut counts = [0u32; 100_000];  // 5 digit numbers (0-99999)
+        let mut counts = [0u32; 100_000]; // Assuming IDs are in 0..99,999
         let mut left = Vec::with_capacity(1024);
         let bytes = input.as_bytes();
+        let len = bytes.len();
         let mut i = 0;
-        
-        // First pass: collect left numbers and count right numbers
-        while i < bytes.len() {
-            // Parse and store left number
-            let mut num = 0;
-            while i < bytes.len() && bytes[i].is_ascii_digit() {
-                num = num * 10 + (bytes[i] - b'0') as usize;
-                i += 1;
+
+        // Parsing numbers
+        while i < len {
+            // Parse left number
+            let mut num = 0usize;
+            while i < len {
+                let digit = bytes[i];
+                if digit.is_ascii_digit() {
+                    num = num * 10 + (digit - b'0') as usize;
+                    i += 1;
+                } else {
+                    break;
+                }
             }
             left.push(num);
-            i += 1;
-            
-            // Parse and count right number
-            num = 0;
-            while i < bytes.len() && bytes[i].is_ascii_digit() {
-                num = num * 10 + (bytes[i] - b'0') as usize;
-                i += 1;
+            i += 1; // Skip space or newline
+
+            // Parse right number
+            num = 0usize;
+            while i < len {
+                let digit = bytes[i];
+                if digit.is_ascii_digit() {
+                    num = num * 10 + (digit - b'0') as usize;
+                    i += 1;
+                } else {
+                    break;
+                }
             }
             counts[num] += 1;
-            
-            if i < bytes.len() { i += 1; }
+
+            // Skip newline or carriage return
+            while i < len && (bytes[i] == b'\n' || bytes[i] == b'\r' || bytes[i] == b' ') {
+                i += 1;
+            }
         }
-        
-        // Second pass: calculate similarity score
-        left.iter()
-            .map(|&num| num as u64 * counts[num] as u64)
-            .sum()
+
+        // Replace closure with for loop
+        let mut similarity_score = 0u64;
+        for &num in &left {
+            // Use unsafe to eliminate bounds checks
+            unsafe {
+                similarity_score += num as u64 * *counts.get_unchecked(num) as u64;
+            }
+        }
+        similarity_score
     }
 }

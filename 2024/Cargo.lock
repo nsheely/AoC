@@ -171,7 +171,6 @@ name = "day_01"
 version = "0.1.0"
 dependencies = [
  "criterion",
- "rayon",
 ]
 
 [[package]]
