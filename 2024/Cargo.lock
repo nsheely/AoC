@@ -192,6 +192,15 @@ name = "day_04"
 version = "0.1.0"
 dependencies = [
  "criterion",
+ "memchr",
+ "rayon",
+]
+
+[[package]]
+name = "day_05"
+version = "0.1.0"
+dependencies = [
+ "criterion",
 ]
 
 [[package]]
